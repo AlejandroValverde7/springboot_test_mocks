@@ -1,13 +1,22 @@
 package org.avalverde.test.springboot.app.demo.models;
 
+
 import org.avalverde.test.springboot.app.demo.exceptions.DineroInsuficienteException;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+//Ligamos cada propiedad de la clase a la base de datos
+@javax.persistence.Entity
+@Table(name="cuentas")
 public class Cuenta {
 
+    //Cada base de datos tiene su propia PK
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String persona;
     private BigDecimal saldo;
 

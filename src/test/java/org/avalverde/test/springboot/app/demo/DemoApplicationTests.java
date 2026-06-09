@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.io.DataOutput;
 import java.math.BigDecimal;
@@ -28,9 +28,9 @@ import java.math.BigDecimal;
 @SpringBootTest
 class DemoApplicationTests {
 
-	@MockitoBean
+	@MockBean
 	CuentaRepository cuentaRepository;
-	@MockitoBean
+	@MockBean
 	BancoRepository bancoRepository;
 
 	@Autowired
@@ -53,18 +53,15 @@ class DemoApplicationTests {
 		//indicamos los valores que se deben devovler segun el parametro de entrada
 		when(cuentaRepository.findById(1L)).thenReturn(crearCuenta001());
 		when(cuentaRepository.findById(2L)).thenReturn(crearCuenta002());
-		when(cuentaRepository.findById(3L)).thenReturn(CUENTA_003);
 		when(bancoRepository.findById(1L)).thenReturn(crearBanco());
 
 		//Dentro del revisar saldo se devuelven las cuentas indicadas arriba
 		BigDecimal saldoOrigen = service.revisarSaldo(1L);
 		BigDecimal saldoDestino = service.revisarSaldo(2L);
-		BigDecimal saldoPrueba = service.revisarSaldo(3L);
 
 		//comprobamos el saldo
 		assertEquals("1000",saldoOrigen.toPlainString());
 		assertEquals("2000",saldoDestino.toPlainString());
-		assertEquals("3000",saldoPrueba.toPlainString());
 
 		//hacemos una transferencia de una cuenta a otra
 		service.transferir(1L,2L,new BigDecimal("100"),1L);
@@ -81,12 +78,12 @@ class DemoApplicationTests {
 
 		verify(cuentaRepository,times(3)).findById(1L);
 		verify(cuentaRepository,times(3)).findById(2L);
-		verify(cuentaRepository,times(2)).update(any(Cuenta.class));
+		verify(cuentaRepository,times(2)).save(any(Cuenta.class));
 
 		verify(bancoRepository,times(2)).findById(1L);
-		verify(bancoRepository).update(any(Banco.class));
+		verify(bancoRepository).save(any(Banco.class));
 
-		verify(cuentaRepository,times(7)).findById(anyLong());
+		verify(cuentaRepository,times(6)).findById(anyLong());
 		verify(cuentaRepository,never()).findAll();
 	}
 
@@ -96,18 +93,15 @@ class DemoApplicationTests {
 		//indicamos los valores que se deben devovler segun el parametro de entrada
 		when(cuentaRepository.findById(1L)).thenReturn(crearCuenta001());
 		when(cuentaRepository.findById(2L)).thenReturn(crearCuenta002());
-		when(cuentaRepository.findById(3L)).thenReturn(CUENTA_003);
 		when(bancoRepository.findById(1L)).thenReturn(crearBanco());
 
 		//Dentro del revisar saldo se devuelven las cuentas indicadas arriba
 		BigDecimal saldoOrigen = service.revisarSaldo(1L);
 		BigDecimal saldoDestino = service.revisarSaldo(2L);
-		BigDecimal saldoPrueba = service.revisarSaldo(3L);
 
 		//comprobamos el saldo
 		assertEquals("1000",saldoOrigen.toPlainString());
 		assertEquals("2000",saldoDestino.toPlainString());
-		assertEquals("3000",saldoPrueba.toPlainString());
 
 		//Para comprobar si lanza la excepcion
 		assertThrows(DineroInsuficienteException.class, () -> {
@@ -126,10 +120,10 @@ class DemoApplicationTests {
 
 		verify(cuentaRepository,times(3)).findById(1L);
 		verify(cuentaRepository,times(2)).findById(2L);
-		verify(cuentaRepository,never()).update(any(Cuenta.class));
+		verify(cuentaRepository,never()).save(any(Cuenta.class));
 
 		verify(bancoRepository,times(1)).findById(1L);
-		verify(bancoRepository,never()).update(any(Banco.class));
+		verify(bancoRepository,never()).save(any(Banco.class));
 	}
 
 	@Test

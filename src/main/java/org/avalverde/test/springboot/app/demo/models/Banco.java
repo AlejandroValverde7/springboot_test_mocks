@@ -1,9 +1,20 @@
 package org.avalverde.test.springboot.app.demo.models;
 
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "bancos")
 public class Banco {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String nombre;
+
+    //adaptamos y mappeamos a la base datos
+    @Column(name = "total_transferencias")
     private int totalTransferencias;
 
     public Banco() {
