@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 //tenemos que indicar q la impl es un service para registrarlo en spring y poder inyectarlo con autowired
 @Service
@@ -56,5 +57,17 @@ public class CuentaServiceImpl implements CuentaService{
         int totalTransferencias = banco.getTotalTransferencias();
         banco.setTotalTransferencias(++totalTransferencias);
         bancoRepository.save(banco);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Cuenta> findAll() {
+        return cuentaRepository.findAll();
+    }
+
+    @Override
+    @Transactional()
+    public Cuenta save(Cuenta cuenta) {
+        return cuentaRepository.save(cuenta);
     }
 }
