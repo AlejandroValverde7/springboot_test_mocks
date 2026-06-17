@@ -12,4 +12,5 @@ public interface CuentaService {
     void transferir(Long numCuentaOrigen, Long NumCuentaDestino, BigDecimal monto,Long bancoId);
     List<Cuenta> findAll();
     Cuenta save(Cuenta cuenta);
+    void deleteById(Long id);
 }

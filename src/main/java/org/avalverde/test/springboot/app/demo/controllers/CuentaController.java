@@ -9,10 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 //Indicamos con spring que va a ser un controlador
 @RestController //Incluya controller y responsebody que contiene automaticamente en json a lka repuesta
@@ -35,9 +32,14 @@ public class CuentaController {
     }
 
     @GetMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Cuenta detalle(@PathVariable(name = "id") Long id){
-        return cuentaService.findById(id);
+    public ResponseEntity<?> detalle(@PathVariable(name = "id") Long id){
+        Cuenta cuenta = null;
+        try {
+            cuenta = cuentaService.findById(id);
+        }catch (NoSuchElementException e){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(cuenta);
     }
 
     @PostMapping("/transferir")
@@ -55,5 +57,11 @@ public class CuentaController {
 
         //respondemos y enviamnos un json de respuesta
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void eliminar(@PathVariable Long id){
+        cuentaService.deleteById(id);
     }
 }

@@ -2,6 +2,7 @@ package org.avalverde.test.springboot.app.demo;
 
 import org.avalverde.test.springboot.app.demo.models.Cuenta;
 import org.avalverde.test.springboot.app.demo.repositories.CuentaRepository;
+import org.junit.jupiter.api.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -13,6 +14,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Tag("Integracion_jpa")
 @DataJpaTest
 public class IntegracionJpaTest {
     @Autowired
